@@ -71,6 +71,54 @@
     </div>
   </section>
 
+  <!-- 独立研究任务一：Promise.all 双数据源并行加载性能测试 -->
+  <section class="card border-0 shadow-sm mb-4" id="research-task-1">
+    <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+      <span>🔬 独立研究任务一：基于 Promise.all 的双数据集并行请求与耗时性能测试</span>
+      <span class="badge bg-info text-dark">选做研究任务已落地</span>
+    </div>
+    <div class="card-body">
+      <p class="text-muted small mb-3">
+        同时请求《校园自习室数据 (study_rooms.json)》与《图书馆借阅数据 (books.json)》，查阅 MDN Promise.all 文档，统一样式显示“加载中”与“全部完成”状态，并利用 performance.now() 对比串行与并行总耗时。
+      </p>
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-4">
+          <button id="btn-run-benchmark" class="btn btn-primary w-100">
+            ⚡ 运行加载性能对比测试（串行 vs 并行）
+          </button>
+        </div>
+        <div class="col-md-8">
+          <div id="benchmark-status" class="alert alert-secondary py-2 mb-0 small">
+            就绪：点击左侧按钮开始测速对比实验
+          </div>
+        </div>
+      </div>
+      <div class="row g-3" id="benchmark-results">
+        <div class="col-md-4">
+          <div class="card bg-light border-0 p-3 text-center">
+            <div class="text-muted small">串行加载总耗时 (Serial)</div>
+            <div class="fs-4 fw-bold text-secondary mt-1" id="serial-time">-- ms</div>
+            <div class="small text-muted mt-1">先等 A 返回，再等 B 返回</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-light border-0 p-3 text-center">
+            <div class="text-muted small">Promise.all 并行加载耗时 (Parallel)</div>
+            <div class="fs-4 fw-bold text-success mt-1" id="parallel-time">-- ms</div>
+            <div class="small text-muted mt-1">A 与 B 同时发出，并发等待</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-light border-0 p-3 text-center">
+            <div class="text-muted small">性能提效率 (Improvement)</div>
+            <div class="fs-4 fw-bold text-primary mt-1" id="speedup-rate">-- %</div>
+            <div class="small text-muted mt-1">耗时显著缩短</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 自习室明细卡片网格 -->
   <section class="mb-4">
     <div class="row g-3" id="rooms-list"></div>
