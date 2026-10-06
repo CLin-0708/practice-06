@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园自习室实时数据看板 - 自主实践</title>
+  <link href="libs/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    .card-stat { border-radius: 10px; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; }
+    .card-stat:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .chart-box { height: 380px; background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .placeholder-box { display: flex; align-items: center; justify-content: center; border: 2px dashed #dee2e6; color: #adb5bd; font-size: 1.1rem; }
+    #status { display: none; }
+  </style>
+</head>
+<body class="container py-4">
+  <header class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="h3 fw-bold text-dark mb-1">📖 校园自习室实时数据看板</h1>
+        <p class="text-muted mb-0" id="sub-title">校园自习室信息 · 数据来源：课程统一数据集（教学演示数据，非真实统计）</p>
+      </div>
+      <span class="badge bg-primary px-3 py-2 fs-6">自主实践应用</span>
+    </div>
+  </header>
+
+  <!-- 4 状态提示框 -->
+  <div id="status" class="alert alert-warning alert-dismissible fade show" role="alert"></div>
+
+  <!-- 宏观统计指标卡片 -->
+  <section class="row g-3 mb-4" id="cards"></section>
+
+  <!-- 图表区域（Step 1 骨架占位） -->
+  <section class="row g-3 mb-4">
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold py-3">各楼栋座位容量与在座人数对比（ECharts 柱状图）</div>
+        <div class="card-body">
+          <div id="bar-chart" class="chart-box placeholder-box">第 1 步：页面骨架搭建完成，图表待第 2 步挂载</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold py-3">自习室当前开放状态分布（Chart.js 环形图）</div>
+        <div class="card-body">
+          <div class="chart-box placeholder-box"><canvas id="status-chart" style="display:none;"></canvas>第 1 步：图表待第 3 步挂载</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="libs/jquery-3.7.1.min.js"></script>
+  <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/echarts.min.js"></script>
+  <script src="libs/chart.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
