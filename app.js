@@ -106,6 +106,43 @@ const renderBarChart = (data) => {
       }
     ]
   });
+
+  // 独立研究任务二：查阅 ECharts events 官方文档，监听柱状图点击事件实现图表联动
+  barChart.off('click');
+  barChart.on('click', function (params) {
+    if (!params || !params.name) return;
+    const building = params.name;
+    console.log('【ECharts events 联动触发】点击了楼栋分类：', building);
+
+    // 1. 显示顶部联动状态条
+    $('#linkage-target').text(`【${building}】`);
+    $('#linkage-alert').fadeIn(200);
+
+    // 2. 联动激活对应的 jQuery 筛选按钮
+    $(`#building-filters button[data-filter="${building}"]`)
+      .addClass('active')
+      .siblings()
+      .removeClass('active');
+
+    // 3. 联动过滤下方自习室明细卡片
+    $('.room-item').each(function () {
+      if ($(this).data('building') === building) {
+        $(this).fadeIn(200);
+      } else {
+        $(this).hide();
+      }
+    });
+
+    const count = $(`.room-item[data-building="${building}"]`).length;
+    $('#filter-counter').text(`🔗 ECharts 图表联动生效：当前已筛选 ${building} 区域共 ${count} 间自习室`);
+  });
+
+  // 重置联动
+  $('#reset-linkage').off('click').on('click', function (e) {
+    e.preventDefault();
+    $('#linkage-alert').hide();
+    $('#building-filters button[data-filter="all"]').trigger('click');
+  });
 };
 
 // 窗口自适应

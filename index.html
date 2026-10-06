@@ -35,9 +35,15 @@
   <section class="row g-3 mb-4">
     <div class="col-lg-7">
       <div class="card border-0 shadow-sm h-100">
-        <div class="card-header bg-white fw-bold py-3">各楼栋座位容量与在座人数对比（ECharts 柱状图）</div>
+        <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+          <span>各楼栋座位容量与在座人数对比（ECharts 柱状图）</span>
+          <span class="badge bg-success" id="linkage-badge">🔗 图表联动已就绪（可点击柱子）</span>
+        </div>
         <div class="card-body">
-          <div id="bar-chart" class="chart-box" style="width: 100%; height: 380px;"></div>
+          <div id="linkage-alert" class="alert alert-info py-2 px-3 small mb-2" style="display:none;">
+            🎯 <strong>ECharts 事件联动生效：</strong>当前已联动聚焦 <span id="linkage-target" class="fw-bold"></span> 自习室明细（<a href="#" id="reset-linkage" class="alert-link">点击重置</a>）
+          </div>
+          <div id="bar-chart" class="chart-box" style="width: 100%; height: 350px;"></div>
         </div>
       </div>
     </div>
