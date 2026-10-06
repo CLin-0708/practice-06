@@ -27,6 +27,8 @@ const loadData = async () => {
     // 第三步：渲染 Chart.js 自习室状态分布环形图与自习室卡片列表
     renderStatusChart(data);
     renderRoomsList(data.rooms);
+    // 独立研究任务三：渲染误导性对比图表（截断 vs 诚实零基坐标轴）
+    renderEthicsCharts();
   } catch (error) {
     let msg = `⚠️ 数据加载失败：${error.message}`;
     if (window.location.protocol === 'file:') {
@@ -41,6 +43,7 @@ const loadData = async () => {
       renderBarChart(fallbackStudyRooms);
       renderStatusChart(fallbackStudyRooms);
       renderRoomsList(fallbackStudyRooms.rooms);
+      renderEthicsCharts();
     });
   }
 };
@@ -313,6 +316,70 @@ $('#btn-run-benchmark').on('click', runBenchmark);
 
 // 页面加载完成后自动预跑一次性能测试
 setTimeout(runBenchmark, 500);
+
+let misleadingChart = null;
+let honestChart = null;
+
+// ==================== 独立研究任务三：误导性对比图表 ====================
+const renderEthicsCharts = () => {
+  const roomsSample = [
+    { name: '楠苑一楼', rate: 72 },
+    { name: '图一自习', rate: 74 },
+    { name: '文科考研', rate: 94 },
+    { name: '图三静音', rate: 97 }
+  ];
+
+  // 1. 左侧：误导版本（截断 Y 轴从 70% 开始，夸大 20% 差距为数倍）
+  const elMis = document.querySelector('#misleading-chart');
+  if (elMis) {
+    if (!misleadingChart) misleadingChart = echarts.init(elMis);
+    misleadingChart.setOption({
+      tooltip: { trigger: 'axis', formatter: '{b}: 在座率 {c}%' },
+      grid: { left: '8%', right: '5%', bottom: '15%', top: '15%', containLabel: true },
+      xAxis: { type: 'category', data: roomsSample.map(r => r.name) },
+      yAxis: {
+        type: 'value',
+        min: 70, // 恶意截断起点！
+        max: 100,
+        name: '在座率 (%)'
+      },
+      series: [{
+        type: 'bar',
+        data: roomsSample.map(r => r.rate),
+        itemStyle: { color: '#ef4444', borderRadius: [4, 4, 0, 0] },
+        label: { show: true, position: 'top', formatter: '{c}%' }
+      }]
+    });
+  }
+
+  // 2. 右侧：诚实版本（坚守红线，Y 轴从 0 开始）
+  const elHonest = document.querySelector('#honest-chart');
+  if (elHonest) {
+    if (!honestChart) honestChart = echarts.init(elHonest);
+    honestChart.setOption({
+      tooltip: { trigger: 'axis', formatter: '{b}: 在座率 {c}%' },
+      grid: { left: '8%', right: '5%', bottom: '15%', top: '15%', containLabel: true },
+      xAxis: { type: 'category', data: roomsSample.map(r => r.name) },
+      yAxis: {
+        type: 'value',
+        min: 0, // 坚守零基准线！
+        max: 100,
+        name: '在座率 (%)'
+      },
+      series: [{
+        type: 'bar',
+        data: roomsSample.map(r => r.rate),
+        itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] },
+        label: { show: true, position: 'top', formatter: '{c}%' }
+      }]
+    });
+  }
+};
+
+window.addEventListener('resize', () => {
+  if (misleadingChart) misleadingChart.resize();
+  if (honestChart) honestChart.resize();
+});
 
 // 渲染统计卡片
 const renderCards = (data) => {

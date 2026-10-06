@@ -125,6 +125,45 @@
     </div>
   </section>
 
+  <!-- 独立研究任务三：误导图表案例复现与诚实版本修复对比 -->
+  <section class="card border-0 shadow-sm mb-4" id="research-task-3">
+    <div class="card-header bg-white fw-bold py-3 d-flex justify-content-between align-items-center">
+      <span>🔬 独立研究任务三：误导性图表（截断坐标轴）案例复现与诚实版本修复</span>
+      <span class="badge bg-warning text-dark">数据表达责任与伦理规范</span>
+    </div>
+    <div class="card-body">
+      <div class="row g-3 mb-3">
+        <!-- 误导版本 -->
+        <div class="col-lg-6">
+          <div class="border rounded p-3 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-danger">❌ 误导版本（截断 Y 轴夸大微小差异）</span>
+              <span class="badge bg-danger">Y 轴起点：70%</span>
+            </div>
+            <div id="misleading-chart" style="width: 100%; height: 260px;"></div>
+          </div>
+        </div>
+        <!-- 诚实版本 -->
+        <div class="col-lg-6">
+          <div class="border rounded p-3 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-success">✅ 诚实版本（坚守红线，从 0 开始）</span>
+              <span class="badge bg-success">Y 轴起点：0%</span>
+            </div>
+            <div id="honest-chart" style="width: 100%; height: 260px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- 200 字分析说明 -->
+      <div class="alert alert-light border small mb-0">
+        <h6 class="fw-bold text-dark mb-1">📝 误导图表分析与修复说明（约 200 字）：</h6>
+        <p class="mb-0 text-secondary" style="line-height: 1.6;">
+          在数据可视化中，“截断坐标轴（Truncated Axis）”是最常见且极具欺骗性的视觉陷阱。左侧误导图表人为将 Y 轴起点抬高至 70%，使得 74% 与 97% 之间仅约 20% 的在座率差距，在视觉柱高上被虚假放大了近 6 倍（74% 的柱子矮小见底，97% 柱子高耸入云），极易误导管理人员做出“低负荷自习室空无一人”的严重误判。在右侧修复版本中，我们坚决贯彻讲义提出的数据表达责任红线，将数值轴基准线强制锚定在 0%，使柱体面积与真实数值严格成正比。该案例表明，图表不仅是呈现数据的工具，更承载着客观、中立的技术伦理责任，任何通过调整视觉比例夸大或掩盖事实的做法都违背了软件工程与数据科学的基本准则。
+        </p>
+      </div>
+    </div>
+  </section>
+
   <!-- 自习室明细卡片网格 -->
   <section class="mb-4">
     <div class="row g-3" id="rooms-list"></div>
