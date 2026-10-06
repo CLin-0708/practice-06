@@ -31,10 +31,10 @@
   <!-- 宏观统计指标卡片 -->
   <section class="row g-3 mb-4" id="cards"></section>
 
-  <!-- 图表区域（Step 2 挂载 ECharts 柱状图） -->
+  <!-- 图表区域（Step 3 双库图表完整呈现） -->
   <section class="row g-3 mb-4">
     <div class="col-lg-7">
-      <div class="card border-0 shadow-sm">
+      <div class="card border-0 shadow-sm h-100">
         <div class="card-header bg-white fw-bold py-3">各楼栋座位容量与在座人数对比（ECharts 柱状图）</div>
         <div class="card-body">
           <div id="bar-chart" class="chart-box" style="width: 100%; height: 380px;"></div>
@@ -42,13 +42,38 @@
       </div>
     </div>
     <div class="col-lg-5">
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white fw-bold py-3">自习室当前开放状态分布（Chart.js 环形图）</div>
-        <div class="card-body">
-          <div class="chart-box placeholder-box"><canvas id="status-chart" style="display:none;"></canvas>第 2 步完成柱状图，本图待第 3 步挂载</div>
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white fw-bold py-3">自习室开放状态分布（Chart.js 环形图）</div>
+        <div class="card-body d-flex align-items-center justify-content-center" style="height: 380px;">
+          <canvas id="status-chart"></canvas>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- jQuery 楼栋交互筛选控制条 -->
+  <section class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div>
+          <span class="fw-bold me-2">🏢 楼栋分类快速筛选（jQuery 交互）：</span>
+          <div class="btn-group" role="group" id="building-filters">
+            <button type="button" class="btn btn-outline-primary btn-sm active" data-filter="all">全部楼栋 (12)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter="楠苑">楠苑 (3)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter="梓苑">梓苑 (2)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter="图书馆">图书馆 (3)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter="理科楼">理科楼 (2)</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter="文科楼">文科楼 (2)</button>
+          </div>
+        </div>
+        <div id="filter-counter" class="text-muted small">当前展示：全部 12 间自习室（点击卡片可高亮标记）</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 自习室明细卡片网格 -->
+  <section class="mb-4">
+    <div class="row g-3" id="rooms-list"></div>
   </section>
 
   <script src="libs/jquery-3.7.1.min.js"></script>

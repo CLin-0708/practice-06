@@ -24,6 +24,9 @@ const loadData = async () => {
     renderCards(data);
     // 第二步：渲染 ECharts 各楼栋容量与在座人数对比柱状图
     renderBarChart(data);
+    // 第三步：渲染 Chart.js 自习室状态分布环形图与自习室卡片列表
+    renderStatusChart(data);
+    renderRoomsList(data.rooms);
   } catch (error) {
     let msg = `⚠️ 数据加载失败：${error.message}`;
     if (window.location.protocol === 'file:') {
@@ -36,6 +39,8 @@ const loadData = async () => {
       state.data = fallbackStudyRooms;
       renderCards(fallbackStudyRooms);
       renderBarChart(fallbackStudyRooms);
+      renderStatusChart(fallbackStudyRooms);
+      renderRoomsList(fallbackStudyRooms.rooms);
     });
   }
 };
@@ -106,6 +111,109 @@ const renderBarChart = (data) => {
 // 窗口自适应
 window.addEventListener('resize', () => {
   if (barChart) barChart.resize();
+});
+
+let statusChart = null;
+// 第三步：Chart.js 自习室开放状态分布环形图
+const renderStatusChart = (data) => {
+  const statusCounts = {
+    '开放': data.rooms.filter(r => r.status === '开放').length,
+    '维修': data.rooms.filter(r => r.status === '维修').length,
+    '闭馆': data.rooms.filter(r => r.status === '闭馆').length
+  };
+
+  const ctx = document.querySelector('#status-chart');
+  if (statusChart !== null) {
+    statusChart.destroy(); // 防重复初始化
+  }
+
+  statusChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['正常开放', '暂停维修', '闭馆中'],
+      datasets: [{
+        data: [statusCounts['开放'], statusCounts['维修'], statusCounts['闭馆']],
+        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 14, font: { size: 12 } }
+        },
+        title: {
+          display: true,
+          text: '自习室当前开放状态占比（共12间）',
+          font: { size: 14, weight: 'bold' }
+        }
+      }
+    }
+  });
+};
+
+// 第三步：动态渲染自习室列表网格
+const renderRoomsList = (rooms) => {
+  $('#rooms-list').empty();
+  rooms.forEach(r => {
+    let badgeClass = 'bg-success';
+    if (r.status === '维修') badgeClass = 'bg-warning text-dark';
+    if (r.status === '闭馆') badgeClass = 'bg-danger';
+
+    const rate = ((r.occupied / r.seats) * 100).toFixed(0);
+
+    $('#rooms-list').append(`
+      <div class="col-md-4 col-sm-6 room-item" data-building="${r.building}">
+        <div class="card card-room h-100 border-0 shadow-sm p-3" style="cursor: pointer; transition: all 0.2s;">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="h6 fw-bold mb-0">${r.name}</h5>
+            <span class="badge ${badgeClass}">${r.status}</span>
+          </div>
+          <div class="small text-muted mb-2">
+            <span>📍 ${r.building} · ${r.floor}楼</span> | <span>⏰ ${r.hours}</span>
+          </div>
+          <div class="d-flex justify-content-between text-muted small mb-1">
+            <span>在座：${r.occupied} / ${r.seats} 席</span>
+            <span>负荷：${rate}%</span>
+          </div>
+          <div class="progress" style="height: 6px;">
+            <div class="progress-bar ${rate > 80 ? 'bg-danger' : 'bg-primary'}" role="progressbar" style="width: ${rate}%;"></div>
+          </div>
+        </div>
+      </div>
+    `);
+  });
+};
+
+// 第三步：jQuery 楼栋分类快速筛选交互
+$('#building-filters').on('click', 'button', function () {
+  const $btn = $(this);
+  $btn.addClass('active').siblings().removeClass('active');
+  const filter = $btn.data('filter');
+
+  if (filter === 'all') {
+    $('.room-item').fadeIn(200);
+    $('#filter-counter').text('当前展示：全部 12 间自习室（点击卡片可高亮标记）');
+  } else {
+    $('.room-item').each(function () {
+      const b = $(this).data('building');
+      if (b === filter) {
+        $(this).fadeIn(200);
+      } else {
+        $(this).hide();
+      }
+    });
+    const count = $(`.room-item[data-building="${filter}"]`).length;
+    $('#filter-counter').text(`当前展示：${filter} 区域共 ${count} 间自习室`);
+  }
+});
+
+// 第三步：jQuery 卡片点击高亮交互
+$('#rooms-list').on('click', '.card-room', function () {
+  $(this).toggleClass('border-primary border-2 shadow');
 });
 
 // 渲染统计卡片
