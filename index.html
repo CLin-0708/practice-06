@@ -31,13 +31,13 @@
   <!-- 宏观统计指标卡片 -->
   <section class="row g-3 mb-4" id="cards"></section>
 
-  <!-- 图表区域（Step 1 骨架占位） -->
+  <!-- 图表区域（Step 2 挂载 ECharts 柱状图） -->
   <section class="row g-3 mb-4">
     <div class="col-lg-7">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white fw-bold py-3">各楼栋座位容量与在座人数对比（ECharts 柱状图）</div>
         <div class="card-body">
-          <div id="bar-chart" class="chart-box placeholder-box">第 1 步：页面骨架搭建完成，图表待第 2 步挂载</div>
+          <div id="bar-chart" class="chart-box" style="width: 100%; height: 380px;"></div>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white fw-bold py-3">自习室当前开放状态分布（Chart.js 环形图）</div>
         <div class="card-body">
-          <div class="chart-box placeholder-box"><canvas id="status-chart" style="display:none;"></canvas>第 1 步：图表待第 3 步挂载</div>
+          <div class="chart-box placeholder-box"><canvas id="status-chart" style="display:none;"></canvas>第 2 步完成柱状图，本图待第 3 步挂载</div>
         </div>
       </div>
     </div>

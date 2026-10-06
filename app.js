@@ -22,6 +22,8 @@ const loadData = async () => {
     
     // 第一步：渲染宏观统计指标卡片
     renderCards(data);
+    // 第二步：渲染 ECharts 各楼栋容量与在座人数对比柱状图
+    renderBarChart(data);
   } catch (error) {
     let msg = `⚠️ 数据加载失败：${error.message}`;
     if (window.location.protocol === 'file:') {
@@ -33,9 +35,78 @@ const loadData = async () => {
       $('#status').hide();
       state.data = fallbackStudyRooms;
       renderCards(fallbackStudyRooms);
+      renderBarChart(fallbackStudyRooms);
     });
   }
 };
+
+let barChart = null;
+// 第二步：ECharts 各楼栋柱状图
+const renderBarChart = (data) => {
+  if (!barChart) {
+    barChart = echarts.init(document.querySelector('#bar-chart'));
+  }
+  const buildings = ['楠苑', '梓苑', '图书馆', '理科楼', '文科楼'];
+  const stats = buildings.map(b => {
+    const rooms = data.rooms.filter(r => r.building === b);
+    const seats = rooms.reduce((sum, r) => sum + r.seats, 0);
+    const occupied = rooms.reduce((sum, r) => sum + r.occupied, 0);
+    return { building: b, seats, occupied };
+  });
+
+  barChart.setOption({
+    title: {
+      text: '各楼栋自习资源分布对比',
+      subtext: '总座位容量 vs 当前在馆人数（单位：席/人）',
+      left: 'center',
+      textStyle: { fontSize: 15, fontWeight: 'bold' },
+      subtextStyle: { fontSize: 12 }
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' }
+    },
+    legend: {
+      bottom: 5,
+      data: ['总座位容量', '当前在馆人数']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '12%',
+      top: '18%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: stats.map(s => s.building),
+      axisTick: { alignWithLabel: true }
+    },
+    yAxis: {
+      type: 'value',
+      name: '数量'
+    },
+    series: [
+      {
+        name: '总座位容量',
+        type: 'bar',
+        data: stats.map(s => s.seats),
+        itemStyle: { color: '#3b82f6', borderRadius: [4, 4, 0, 0] }
+      },
+      {
+        name: '当前在馆人数',
+        type: 'bar',
+        data: stats.map(s => s.occupied),
+        itemStyle: { color: '#f59e0b', borderRadius: [4, 4, 0, 0] }
+      }
+    ]
+  });
+};
+
+// 窗口自适应
+window.addEventListener('resize', () => {
+  if (barChart) barChart.resize();
+});
 
 // 渲染统计卡片
 const renderCards = (data) => {
